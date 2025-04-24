@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: flask
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: flask
+  template:
+    metadata:
+      labels:
+        app: flask
+    spec:
+      containers:
+        - name: flask
+          image: {{ .Values.flask.image }}
+          imagePullPolicy: Never
+          ports:
+            - containerPort: {{ .Values.flask.port }}
+          env:
+            - name: REDIS_HOST
+              value: redis
