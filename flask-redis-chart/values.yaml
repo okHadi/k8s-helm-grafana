@@ -10,6 +10,27 @@ flask:
 redis:
   image: redis
   port: 6379
+
+# Monitoring configurations
+prometheus:
+  enabled: true
+  image: prom/prometheus
+  port: 9090
+  nodePort: 30090
+  persistentVolume:
+    enabled: true
+    size: 2Gi
+
+grafana:
+  enabled: true
+  image: grafana/grafana
+  port: 3000
+  nodePort: 30300
+  persistentVolume:
+    enabled: true
+    size: 1Gi
+  adminUser: admin
+  adminPassword: admin
 # This will set the replicaset count more information can be found here: https://kubernetes.io/docs/concepts/workloads/controllers/replicaset/
 #replicaCount: 1
 
