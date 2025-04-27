@@ -74,7 +74,7 @@ data:
           "steppedLine": false,
           "targets": [
             {
-              "expr": "rate(app_request_count[1m])",
+              "expr": "rate(app_request_count_total[1m])",
               "interval": "",
               "legendFormat": "Requests/min",
               "refId": "A"
