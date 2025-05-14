@@ -1,8 +1,9 @@
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify, render_template, request
 import redis
 import os
 from prometheus_client import Counter, Histogram, Gauge, generate_latest, CONTENT_TYPE_LATEST, CollectorRegistry
 import time
+import sys
 
 # Create a custom registry
 registry = CollectorRegistry()
@@ -46,6 +47,25 @@ def metrics():
     
     # Generate latest metrics from our custom registry
     return generate_latest(registry), 200, {'Content-Type': CONTENT_TYPE_LATEST}
+
+@app.route('/crash')
+def crash():
+    """
+    Endpoint that intentionally crashes the application to demonstrate 
+    Kubernetes self-healing capabilities.
+    """
+    # Log that we're about to crash
+    app.logger.error("Application crash triggered via /crash endpoint!")
+    
+    # Increment a counter to track crashes
+    r.incr('crash_counter')
+    
+    # Exit with non-zero status to ensure the container fails
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        # Force crash the process
+        os._exit(1)  # More forceful than sys.exit()
+    return "Crashing application..."
 
 if __name__ == '__main__':
     # Pre-initialize counter to ensure it appears in metrics

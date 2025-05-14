@@ -13,6 +13,42 @@ This application consists of the following components:
 
 Every time you refresh the webpage, the counter increments by one, and various metrics are tracked.
 
+## Demonstrating Kubernetes Resilience
+
+This application includes a special endpoint to demonstrate how Kubernetes provides self-healing capabilities:
+
+### `/crash` Endpoint
+
+Visit `http://<your-app-url>/crash` to intentionally crash the application. This endpoint will:
+
+1. Log an error message
+2. Increment a crash counter in Redis
+3. Force the application to exit with a non-zero status code
+
+#### Observing Self-Healing:
+
+When running standalone:
+- The application will simply crash and stop working
+- You'll need to manually restart it with `python3 app.py`
+
+When running in Kubernetes:
+- The Pod will crash, but Kubernetes will detect the failure
+- Kubernetes will automatically restart the Pod (you can observe this with `kubectl get pods`)
+- The application will be available again shortly without any manual intervention
+
+This demonstrates a key advantage of containerized applications in Kubernetes: automated recovery from failures.
+
+To observe this process:
+```bash
+# Watch pods in real-time
+kubectl get pods -w
+
+# In another terminal, trigger the crash
+curl http://$(minikube ip):30007/crash
+
+# Observe in the first terminal that Kubernetes automatically restarts the pod
+```
+
 ## Monitoring with Prometheus and Grafana
 
 This project includes a complete monitoring setup using Prometheus and Grafana:
@@ -118,7 +154,7 @@ python3 -m venv venv
 source venv/bin/activate
 
 # Install dependencies
-pip install flask redis
+pip install flask redis prometheus-client
 
 # Run the Flask app
 python3 app.py

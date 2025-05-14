@@ -6,6 +6,7 @@ flask:
   image: flask-redis-app
   port: 5000
   nodePort: 30007
+  replicas: 3
 
 redis:
   image: redis
