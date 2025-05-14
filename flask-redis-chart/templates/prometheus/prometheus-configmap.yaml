@@ -23,3 +23,19 @@ data:
             regex: '(.*):10250'
             replacement: '${1}:10255'
             target_label: __address__
+      - job_name: 'kubernetes-pods'
+        kubernetes_sd_configs:
+          - role: pod
+        relabel_configs:
+          - source_labels: [__meta_kubernetes_pod_label_app]
+            regex: flask
+            action: keep
+          - source_labels: [__meta_kubernetes_pod_name]
+            target_label: pod
+          - source_labels: [__meta_kubernetes_pod_container_name]
+            target_label: container
+          - source_labels: [__meta_kubernetes_namespace]
+            target_label: namespace
+      - job_name: 'kube-state-metrics'
+        static_configs:
+          - targets: ['kube-state-metrics:8080']

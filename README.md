@@ -28,10 +28,12 @@ Visit `http://<your-app-url>/crash` to intentionally crash the application. This
 #### Observing Self-Healing:
 
 When running standalone:
+
 - The application will simply crash and stop working
 - You'll need to manually restart it with `python3 app.py`
 
 When running in Kubernetes:
+
 - The Pod will crash, but Kubernetes will detect the failure
 - Kubernetes will automatically restart the Pod (you can observe this with `kubectl get pods`)
 - The application will be available again shortly without any manual intervention
@@ -39,6 +41,7 @@ When running in Kubernetes:
 This demonstrates a key advantage of containerized applications in Kubernetes: automated recovery from failures.
 
 To observe this process:
+
 ```bash
 # Watch pods in real-time
 kubectl get pods -w

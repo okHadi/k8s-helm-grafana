@@ -310,6 +310,245 @@ data:
             "align": false,
             "alignLevel": null
           }
+        },
+        {
+          "datasource": "Prometheus",
+          "fieldConfig": {
+            "defaults": {
+              "custom": {},
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "red",
+                    "value": 80
+                  }
+                ]
+              },
+              "color": {
+                "mode": "thresholds"
+              },
+              "unit": "none"
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 8
+          },
+          "id": 8,
+          "options": {
+            "displayMode": "basic",
+            "orientation": "horizontal",
+            "reduceOptions": {
+              "calcs": [
+                "lastNotNull"
+              ],
+              "fields": "",
+              "values": false
+            },
+            "showUnfilled": true
+          },
+          "pluginVersion": "7.2.0",
+          "targets": [
+            {
+              "expr": "count(kube_pod_info{pod=~\"flask.*\"})",
+              "instant": true,
+              "interval": "",
+              "legendFormat": "Total Pods",
+              "refId": "A"
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Flask Pod Count",
+          "type": "bargauge"
+        },
+        {
+          "datasource": "Prometheus",
+          "description": "Number of pod restarts by pod",
+          "fieldConfig": {
+            "defaults": {
+              "custom": {
+                "align": null,
+                "filterable": false
+              },
+              "mappings": [],
+              "thresholds": {
+                "mode": "absolute",
+                "steps": [
+                  {
+                    "color": "green",
+                    "value": null
+                  },
+                  {
+                    "color": "yellow",
+                    "value": 1
+                  },
+                  {
+                    "color": "red",
+                    "value": 3
+                  }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 0,
+            "y": 16
+          },
+          "id": 10,
+          "options": {
+            "showHeader": true,
+            "sortBy": [
+              {
+                "desc": true,
+                "displayName": "Restarts"
+              }
+            ]
+          },
+          "pluginVersion": "7.2.0",
+          "targets": [
+            {
+              "expr": "kube_pod_container_status_restarts_total{pod=~\"flask.*\"}",
+              "instant": true,
+              "interval": "",
+              "legendFormat": "{{`{{pod}}`}}",
+              "refId": "A"
+            }
+          ],
+          "timeFrom": null,
+          "timeShift": null,
+          "title": "Flask Pod Restarts",
+          "transformations": [
+            {
+              "id": "organize",
+              "options": {
+                "excludeByName": {
+                  "Time": true,
+                  "__name__": true,
+                  "container": false,
+                  "endpoint": true,
+                  "instance": true,
+                  "job": true,
+                  "namespace": true,
+                  "service": true
+                },
+                "indexByName": {},
+                "renameByName": {
+                  "Value": "Restarts",
+                  "pod": "Pod Name"
+                }
+              }
+            }
+          ],
+          "type": "table"
+        },
+        {
+          "aliasColors": {},
+          "bars": false,
+          "dashLength": 10,
+          "dashes": false,
+          "datasource": "Prometheus",
+          "description": "Flask Pod Restarts Over Time",
+          "fieldConfig": {
+            "defaults": {
+              "custom": {}
+            },
+            "overrides": []
+          },
+          "fill": 1,
+          "fillGradient": 0,
+          "gridPos": {
+            "h": 8,
+            "w": 12,
+            "x": 12,
+            "y": 16
+          },
+          "hiddenSeries": false,
+          "id": 12,
+          "legend": {
+            "avg": false,
+            "current": false,
+            "max": false,
+            "min": false,
+            "show": true,
+            "total": false,
+            "values": false
+          },
+          "lines": true,
+          "linewidth": 1,
+          "nullPointMode": "null",
+          "options": {
+            "alertThreshold": true
+          },
+          "percentage": false,
+          "pluginVersion": "7.2.0",
+          "pointradius": 2,
+          "points": false,
+          "renderer": "flot",
+          "seriesOverrides": [],
+          "spaceLength": 10,
+          "stack": false,
+          "steppedLine": false,
+          "targets": [
+            {
+              "expr": "sum(kube_pod_container_status_restarts_total{pod=~\"flask.*\"}) by (pod)",
+              "interval": "",
+              "legendFormat": "{{`{{pod}}`}}",
+              "refId": "A"
+            }
+          ],
+          "thresholds": [],
+          "timeFrom": null,
+          "timeRegions": [],
+          "timeShift": null,
+          "title": "Pod Restarts Over Time",
+          "tooltip": {
+            "shared": true,
+            "sort": 0,
+            "value_type": "individual"
+          },
+          "type": "graph",
+          "xaxis": {
+            "buckets": null,
+            "mode": "time",
+            "name": null,
+            "show": true,
+            "values": []
+          },
+          "yaxes": [
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": "0",
+              "show": true
+            },
+            {
+              "format": "short",
+              "label": null,
+              "logBase": 1,
+              "max": null,
+              "min": null,
+              "show": true
+            }
+          ],
+          "yaxis": {
+            "align": false,
+            "alignLevel": null
+          }
         }
       ],
       "refresh": "10s",
